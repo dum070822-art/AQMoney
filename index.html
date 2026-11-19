@@ -3,14 +3,14 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>AQ MONEY - Quản lý tài chính & Khảo sát nhận thưởng</title>
+  <title>AQ MONEY - Ví, Khảo sát & Trợ lý AI</title>
   <style>
     :root {
       --bg: #0f172a;
       --surface: #1e293b;
       --surface-light: #273549;
       --primary: #38bdf8;
-      --primary-dark: #0284c7;
+      --accent: #22d3ee;
       --income: #22c55e;
       --expense: #ef4444;
       --text: #f8fafc;
@@ -36,203 +36,129 @@
 
     .app-container {
       width: 100%;
-      max-width: 480px;
+      max-width: 500px;
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: 14px;
     }
 
-    /* HEADER */
     header {
       background: linear-gradient(135deg, #0284c7, #1d4ed8);
-      padding: 20px;
+      padding: 18px;
       border-radius: 16px;
       text-align: center;
     }
 
-    .brand {
-      font-weight: 800;
-      letter-spacing: 1px;
-      font-size: 0.9rem;
-      opacity: 0.9;
-    }
+    .brand { font-weight: 800; letter-spacing: 1px; font-size: 0.88rem; opacity: 0.9; }
+    header h1 { font-size: 1.05rem; font-weight: 500; margin: 4px 0 10px; }
+    .balance-label { font-size: 0.82rem; opacity: 0.85; }
+    .balance-amount { font-size: 1.9rem; font-weight: 800; margin-top: 2px; }
 
-    header h1 {
-      font-size: 1.1rem;
-      font-weight: 500;
-      margin: 4px 0 12px;
-      opacity: 0.95;
-    }
-
-    .balance-label {
-      font-size: 0.85rem;
-      opacity: 0.85;
-    }
-
-    .balance-amount {
-      font-size: 2rem;
-      font-weight: 800;
-      margin-top: 4px;
-    }
-
-    /* TABS NAVIGATION */
+    /* 3 TABS */
     .tabs {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: repeat(3, 1fr);
       background: var(--surface);
       padding: 4px;
       border-radius: 12px;
       border: 1px solid var(--border);
+      gap: 4px;
     }
 
     .tab-btn {
-      padding: 10px;
+      padding: 9px 6px;
       border: none;
       border-radius: 9px;
       background: transparent;
       color: var(--muted);
-      font-weight: 600;
-      font-size: 0.95rem;
+      font-weight: 700;
+      font-size: 0.86rem;
       cursor: pointer;
-      transition: transform 0.15s ease, background-color 0.2s ease, color 0.2s ease;
+      transition: transform 0.14s ease, background-color 0.2s ease, color 0.2s ease;
       will-change: transform;
     }
 
-    .tab-btn:active {
-      transform: scale(0.97);
-    }
+    .tab-btn:active { transform: scale(0.96); }
+    .tab-btn.active { background: var(--primary); color: #0f172a; }
 
-    .tab-btn.active {
-      background: var(--primary);
-      color: #0f172a;
-    }
-
-    /* VIEW PANELS */
     .view-panel {
       display: none;
       flex-direction: column;
-      gap: 16px;
-      animation: fadeSlide 0.2s ease-out;
+      gap: 14px;
+      animation: fadeUp 0.18s ease-out;
       will-change: transform, opacity;
     }
 
-    .view-panel.active {
-      display: flex;
+    .view-panel.active { display: flex; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(6px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    @keyframes fadeSlide {
-      from {
-        opacity: 0;
-        transform: translateY(6px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    /* SUMMARY CARDS */
-    .summary-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 12px;
-    }
-
-    .summary-card {
+    .summary-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .summary-card, .card {
       background: var(--surface);
       padding: 14px;
-      border-radius: 12px;
-      border: 1px solid var(--border);
-    }
-
-    .summary-card span {
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    .summary-card h3 {
-      font-size: 1.15rem;
-      margin-top: 4px;
-    }
-
-    .income-text { color: var(--income); }
-    .expense-text { color: var(--expense); }
-
-    /* CARD BOX */
-    .card {
-      background: var(--surface);
-      padding: 16px;
       border-radius: 14px;
       border: 1px solid var(--border);
     }
 
+    .summary-card span { font-size: 0.82rem; color: var(--muted); }
+    .summary-card h3 { font-size: 1.1rem; margin-top: 4px; }
+    .income-text { color: var(--income); }
+    .expense-text { color: var(--expense); }
+
     .card h3 {
-      font-size: 1rem;
-      margin-bottom: 12px;
+      font-size: 0.98rem;
+      margin-bottom: 10px;
       display: flex;
       justify-content: space-between;
       align-items: center;
     }
 
-    /* FORM INPUTS */
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
+    .form-group { display: flex; flex-direction: column; gap: 9px; }
 
     input, select {
       width: 100%;
-      padding: 11px 12px;
+      padding: 10px 12px;
       border-radius: 10px;
       border: 1px solid var(--border);
       background: var(--bg);
       color: var(--text);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       outline: none;
     }
 
-    input:focus, select:focus {
-      border-color: var(--primary);
-    }
+    input:focus, select:focus { border-color: var(--primary); }
 
     .btn-primary {
       width: 100%;
-      padding: 12px;
+      padding: 11px;
       border: none;
       border-radius: 10px;
       background: var(--primary);
       color: #0f172a;
       font-weight: 700;
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       cursor: pointer;
-      transition: transform 0.15s ease, opacity 0.2s ease;
+      transition: transform 0.14s ease;
       will-change: transform;
     }
 
-    .btn-primary:active {
-      transform: scale(0.98);
-    }
+    .btn-primary:active { transform: scale(0.98); }
 
     .btn-secondary {
-      padding: 8px 12px;
+      padding: 6px 10px;
       border-radius: 8px;
       border: 1px solid var(--border);
       background: var(--surface-light);
       color: var(--text);
-      font-size: 0.85rem;
+      font-size: 0.8rem;
       cursor: pointer;
     }
 
-    /* TRANSACTION HISTORY */
-    .tx-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      max-height: 280px;
-      overflow-y: auto;
-    }
-
+    .tx-list { display: flex; flex-direction: column; gap: 8px; max-height: 240px; overflow-y: auto; }
     .tx-item {
       display: flex;
       justify-content: space-between;
@@ -242,206 +168,129 @@
       border-radius: 10px;
       border-left: 4px solid var(--income);
     }
+    .tx-item.expense { border-left-color: var(--expense); }
+    .tx-title { font-size: 0.9rem; font-weight: 600; }
+    .tx-date { font-size: 0.74rem; color: var(--muted); }
+    .tx-right { display: flex; align-items: center; gap: 8px; }
+    .tx-amount { font-weight: 700; font-size: 0.9rem; }
+    .del-btn { background: none; border: none; color: var(--muted); font-size: 1.1rem; cursor: pointer; }
 
-    .tx-item.expense {
-      border-left-color: var(--expense);
-    }
-
-    .tx-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-
-    .tx-title {
-      font-size: 0.92rem;
-      font-weight: 600;
-    }
-
-    .tx-date {
-      font-size: 0.75rem;
-      color: var(--muted);
-    }
-
-    .tx-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .tx-amount {
-      font-weight: 700;
-      font-size: 0.92rem;
-    }
-
-    .del-btn {
-      background: transparent;
-      border: none;
-      color: var(--muted);
-      font-size: 1.1rem;
-      cursor: pointer;
-      padding: 2px 6px;
-    }
-
-    .del-btn:hover {
-      color: var(--expense);
-    }
-
-    /* SURVEY LIST & PLAYER */
+    /* SURVEY */
     .survey-item {
       background: var(--bg);
-      padding: 14px;
+      padding: 12px;
       border-radius: 12px;
       border: 1px solid var(--border);
       display: flex;
       justify-content: space-between;
       align-items: center;
-      gap: 12px;
+      gap: 10px;
       margin-bottom: 10px;
     }
-
-    .survey-item:last-child {
-      margin-bottom: 0;
-    }
-
-    .survey-meta h4 {
-      font-size: 0.95rem;
-      margin-bottom: 4px;
-    }
-
-    .survey-meta p {
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
+    .survey-item:last-child { margin-bottom: 0; }
     .reward-badge {
       display: inline-block;
-      margin-top: 6px;
-      padding: 3px 8px;
+      margin-top: 5px;
+      padding: 2px 8px;
       border-radius: 6px;
       background: rgba(34, 197, 94, 0.15);
       color: var(--income);
       font-weight: 700;
-      font-size: 0.8rem;
+      font-size: 0.78rem;
     }
-
     .start-survey-btn {
-      padding: 9px 14px;
+      padding: 8px 12px;
       border: none;
       border-radius: 8px;
       background: var(--primary);
       color: #0f172a;
       font-weight: 700;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       cursor: pointer;
-      white-space: nowrap;
     }
+    .start-survey-btn.done { background: var(--surface-light); color: var(--muted); cursor: default; }
 
-    .start-survey-btn.done {
-      background: var(--surface-light);
-      color: var(--muted);
-      cursor: default;
-    }
-
-    /* QUIZ / SURVEY QUESTION BOX */
-    .progress-bar {
-      width: 100%;
-      height: 6px;
-      background: var(--bg);
-      border-radius: 99px;
-      overflow: hidden;
-      margin-bottom: 14px;
-    }
-
-    .progress-fill {
-      height: 100%;
-      background: var(--primary);
-      width: 0%;
-      transition: transform 0.25s ease;
-      transform-origin: left;
-    }
-
-    .question-text {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 12px;
-      line-height: 1.4;
-    }
-
-    .options-list {
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      margin-bottom: 16px;
-    }
-
+    .progress-bar { width: 100%; height: 6px; background: var(--bg); border-radius: 99px; overflow: hidden; margin-bottom: 12px; }
+    .progress-fill { height: 100%; background: var(--primary); width: 0%; transition: width 0.2s ease; }
+    .question-text { font-size: 0.98rem; font-weight: 600; margin-bottom: 10px; }
+    .options-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
     .option-btn {
       text-align: left;
-      padding: 12px;
+      padding: 10px 12px;
       border-radius: 10px;
       border: 1px solid var(--border);
       background: var(--bg);
       color: var(--text);
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       cursor: pointer;
-      transition: border-color 0.15s ease, background-color 0.15s ease;
     }
+    .option-btn.selected { border-color: var(--primary); background: rgba(56, 189, 248, 0.15); font-weight: 600; }
 
-    .option-btn.selected {
-      border-color: var(--primary);
-      background: rgba(56, 189, 248, 0.15);
-      font-weight: 600;
+    /* AI TAB */
+    .ai-controls { display: flex; flex-direction: column; gap: 8px; margin-bottom: 10px; }
+    .ai-row { display: flex; gap: 8px; }
+    .ai-box {
+      height: 260px;
+      overflow-y: auto;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 10px;
     }
+    .msg {
+      max-width: 86%;
+      padding: 9px 12px;
+      border-radius: 12px;
+      font-size: 0.88rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+      animation: fadeUp 0.15s ease-out;
+      will-change: transform, opacity;
+    }
+    .msg.user { align-self: flex-end; background: #0284c7; color: #fff; }
+    .msg.ai { align-self: flex-start; background: var(--surface-light); border: 1px solid var(--border); }
 
-    /* TOAST NOTIFICATION */
     .toast {
       position: fixed;
-      bottom: 20px;
+      bottom: 18px;
       left: 50%;
-      transform: translate(-50%, 80px);
+      transform: translate(-50%, 70px);
       background: var(--income);
       color: #052e16;
       font-weight: 700;
-      padding: 12px 20px;
+      padding: 10px 18px;
       border-radius: 99px;
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       opacity: 0;
-      transition: transform 0.25s ease, opacity 0.25s ease;
+      transition: transform 0.22s ease, opacity 0.22s ease;
       pointer-events: none;
       z-index: 99;
       will-change: transform, opacity;
     }
-
-    .toast.show {
-      transform: translate(-50%, 0);
-      opacity: 1;
-    }
-
-    .empty-state {
-      text-align: center;
-      color: var(--muted);
-      font-size: 0.88rem;
-      padding: 16px 0;
-    }
+    .toast.show { transform: translate(-50%, 0); opacity: 1; }
+    .empty-state { text-align: center; color: var(--muted); font-size: 0.85rem; padding: 14px 0; }
   </style>
 </head>
 <body>
   <div class="app-container">
-    <!-- HEADER -->
     <header>
       <div class="brand">AQ MONEY</div>
-      <h1>Quản lý tài chính & Khảo sát</h1>
+      <h1>Ví • Khảo sát • Trợ lý AI</h1>
       <div class="balance-label">Tổng số dư của bạn</div>
       <div class="balance-amount" id="totalBalance">0 đ</div>
     </header>
 
-    <!-- NAVIGATION TABS -->
     <nav class="tabs">
-      <button class="tab-btn active" data-tab="walletView">Ví của tôi</button>
-      <button class="tab-btn" data-tab="surveyView">Khảo sát (+Thưởng)</button>
+      <button class="tab-btn active" data-tab="walletView">Ví tiền</button>
+      <button class="tab-btn" data-tab="surveyView">Khảo sát</button>
+      <button class="tab-btn" data-tab="aiView">Trợ lý AI</button>
     </nav>
 
-    <!-- TAB 1: VÍ AQ MONEY -->
+    <!-- TAB 1: VÍ -->
     <section id="walletView" class="view-panel active">
       <div class="summary-grid">
         <div class="summary-card">
@@ -476,262 +325,260 @@
       </div>
     </section>
 
-    <!-- TAB 2: KHẢO SÁT NHẬN THƯỞNG (SURVEY) -->
+    <!-- TAB 2: KHẢO SÁT -->
     <section id="surveyView" class="view-panel">
-      <!-- Danh sách khảo sát -->
       <div class="card" id="surveyListCard">
         <h3>
-          <span>Khảo sát hiện có</span>
+          <span>Khảo sát nhận thưởng</span>
           <button type="button" class="btn-secondary" id="resetSurveysBtn">Làm lại</button>
         </h3>
         <div id="surveyListContainer"></div>
       </div>
 
-      <!-- Màn hình trả lời câu hỏi -->
       <div class="card" id="surveyPlayerCard" style="display: none;">
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-          <span id="surveyStepText" style="font-size:0.85rem; color:var(--primary); font-weight:700;">Câu 1/3</span>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+          <span id="surveyStepText" style="font-size:0.84rem; color:var(--primary); font-weight:700;">Câu 1/2</span>
           <button type="button" class="btn-secondary" id="cancelSurveyBtn">Thoát</button>
         </div>
-        <div class="progress-bar">
-          <div class="progress-fill" id="surveyProgress"></div>
-        </div>
+        <div class="progress-bar"><div class="progress-fill" id="surveyProgress"></div></div>
         <div class="question-text" id="questionText"></div>
         <div class="options-list" id="optionsList"></div>
         <button type="button" class="btn-primary" id="nextQuestionBtn">Tiếp theo</button>
       </div>
     </section>
+
+    <!-- TAB 3: TRỢ LÝ AI -->
+    <section id="aiView" class="view-panel">
+      <div class="card">
+        <div class="ai-controls">
+          <div class="ai-row">
+            <select id="aiMode">
+              <option value="finance">Cố vấn Tài chính</option>
+              <option value="dev">Hỗ trợ Code Web</option>
+              <option value="fun">Đố vui & Thử thách</option>
+            </select>
+            <button type="button" class="btn-secondary" id="clearAiBtn">Xóa chat</button>
+          </div>
+          <div class="ai-row">
+            <input type="password" id="geminiKeyInput" placeholder="Gemini API Key (tùy chọn)" />
+            <button type="button" class="btn-secondary" id="saveGeminiKeyBtn">Lưu</button>
+          </div>
+        </div>
+
+        <div class="ai-box" id="aiChatBox"></div>
+
+        <form id="aiForm" class="ai-row">
+          <input type="text" id="aiPromptInput" placeholder="Hỏi AI hoặc yêu cầu viết code/câu đố..." required />
+          <button type="submit" class="btn-primary" style="width:auto; padding:0 16px;" id="aiSendBtn">Gửi</button>
+        </form>
+      </div>
+    </section>
   </div>
 
-  <!-- TOAST -->
-  <div class="toast" id="toastBox">+10.000 đ vào ví AQ Money!</div>
+  <div class="toast" id="toastBox"></div>
 
   <script>
-    // ==========================================
-    // 1. DỮ LIỆU KHẢO SÁT MẪU (BẠN CÓ THỂ SỬA/THÊM TẠI ĐÂY)
-    // ==========================================
     const SURVEY_DATA = [
       {
-        id: "sv_spending_2026",
-        title: "Thói quen chi tiêu hàng ngày",
-        desc: "3 câu hỏi ngắn • Mất khoảng 30 giây",
+        id: "sv_budget_1",
+        title: "Khảo sát thói quen chi tiêu",
+        desc: "2 câu hỏi • Thưởng ngay",
         reward: 15000,
         questions: [
-          {
-            q: "Khoản chi tiêu lớn nhất mỗi tuần của bạn thường rơi vào mục nào?",
-            options: ["Ăn uống & Cà phê", "Đi lại & Xăng xe", "Mua sắm online", "Giải trí & Game"]
-          },
-          {
-            q: "Bạn thường ghi chép thu chi vào thời điểm nào?",
-            options: ["Ngay sau khi chi tiền", "Cuối ngày trước khi ngủ", "Cuối tuần tổng kết", "Ít khi ghi chép"]
-          },
-          {
-            q: "Mục tiêu tiết kiệm trong tháng tới của bạn là bao nhiêu?",
-            options: ["Dưới 1 triệu đồng", "Từ 1 - 3 triệu đồng", "Trên 3 triệu đồng", "Chưa có kế hoạch cụ thể"]
-          }
+          { q: "Bạn chi nhiều tiền nhất cho khoản nào?", options: ["Ăn uống", "Di chuyển", "Mua sắm", "Giải trí"] },
+          { q: "Bạn muốn theo dõi thu chi theo chu kỳ nào?", options: ["Hàng ngày", "Hàng tuần", "Hàng tháng"] }
         ]
       },
       {
-        id: "sv_app_feedback",
-        title: "Đánh giá trải nghiệm AQ Money",
-        desc: "2 câu hỏi ngắn • Nhận thưởng ngay",
+        id: "sv_ui_2",
+        title: "Khảo sát trải nghiệm giao diện",
+        desc: "2 câu hỏi • Thưởng ngay",
         reward: 10000,
         questions: [
-          {
-            q: "Bạn thích tính năng nào nhất trên ứng dụng AQ Money?",
-            options: ["Giao diện gọn nhẹ, dễ dùng", "Làm khảo sát nhận tiền thưởng", "Tốc độ tải nhanh", "Lưu dữ liệu tự động"]
-          },
-          {
-            q: "Tính năng nào bạn muốn AQ Money bổ sung tiếp theo?",
-            options: ["Biểu đồ thống kê thu chi", "Đặt hạn mức chi tiêu tháng", "Xuất dữ liệu ra file Excel", "Nhiều nhiệm vụ khảo sát hơn"]
-          }
-        ]
-      },
-      {
-        id: "sv_tech_habits",
-        title: "Khảo sát sử dụng thiết bị di động",
-        desc: "3 câu hỏi • Thưởng cao",
-        reward: 25000,
-        questions: [
-          {
-            q: "Trung bình mỗi ngày bạn dùng điện thoại bao nhiêu giờ?",
-            options: ["Dưới 3 tiếng", "3 - 5 tiếng", "5 - 8 tiếng", "Trên 8 tiếng"]
-          },
-          {
-            q: "Bạn thường dùng trình duyệt web trên điện thoại để làm gì?",
-            options: ["Đọc tin tức & Tra cứu", "Chơi mini-game web", "Học tập & Làm bài tập", "Quản lý công việc / tài chính"]
-          },
-          {
-            q: "Yếu tố nào khiến bạn thoát khỏi một trang web ngay lập tức?",
-            options: ["Tải chậm, giật lag", "Quá nhiều quảng cáo che màn hình", "Giao diện khó nhìn trên điện thoại", "Yêu cầu đăng nhập rườm rà"]
-          }
+          { q: "Giao diện tối (Dark Mode) có dễ nhìn trên máy bạn không?", options: ["Rất dễ nhìn", "Bình thường", "Cần chỉnh thêm"] },
+          { q: "Bạn thích dùng tab nào nhất trong AQ Money?", options: ["Ví tiền", "Khảo sát", "Trợ lý AI"] }
         ]
       }
     ];
 
-    // ==========================================
-    // 2. QUẢN LÝ TRẠNG THÁI & LOCALSTORAGE
-    // ==========================================
-    const STORAGE_KEYS = {
-      TRANSACTIONS: "aq_money_transactions_v1",
-      COMPLETED_SURVEYS: "aq_money_completed_surveys_v1",
-      SURVEY_ANSWERS: "aq_money_survey_answers_v1"
+    const KEYS = {
+      TX: "aq_money_tx_v2",
+      DONE_SV: "aq_money_done_sv_v2",
+      GEMINI_KEY: "aq_money_gemini_key_v2"
     };
 
-    let transactions = JSON.parse(localStorage.getItem(STORAGE_KEYS.TRANSACTIONS)) || [];
-    let completedSurveys = JSON.parse(localStorage.getItem(STORAGE_KEYS.COMPLETED_SURVEYS)) || [];
-    let savedAnswers = JSON.parse(localStorage.getItem(STORAGE_KEYS.SURVEY_ANSWERS)) || {};
+    let transactions = JSON.parse(localStorage.getItem(KEYS.TX)) || [];
+    let completedSurveys = JSON.parse(localStorage.getItem(KEYS.DONE_SV)) || [];
 
-    // Biến tạm khi đang làm khảo sát
-    let activeSurvey = null;
-    let currentQIndex = 0;
-    let tempAnswers = [];
-    let selectedOptionIndex = null;
+    function formatVND(n) { return Number(n).toLocaleString("vi-VN") + " đ"; }
 
-    // ==========================================
-    // 3. TIỆN ÍCH ĐỊNH DẠNG & THÔNG BÁO
-    // ==========================================
-    function formatVND(amount) {
-      return Number(amount).toLocaleString("vi-VN") + " đ";
+    function showToast(msg) {
+      const el = document.getElementById("toastBox");
+      el.textContent = msg;
+      el.classList.add("show");
+      setTimeout(() => el.classList.remove("show"), 2400);
     }
 
-    function showToast(message) {
-      const toast = document.getElementById("toastBox");
-      toast.textContent = message;
-      toast.classList.add("show");
-      setTimeout(() => toast.classList.remove("show"), 2600);
-    }
-
-    function saveWalletState() {
-      localStorage.setItem(STORAGE_KEYS.TRANSACTIONS, JSON.stringify(transactions));
-    }
-
-    // ==========================================
-    // 4. LOGIC VÍ AQ MONEY (TÍNH TOÁN & RENDER)
-    // ==========================================
     function renderWallet() {
-      let income = 0;
-      let expense = 0;
+      let inc = 0, exp = 0;
+      transactions.forEach(t => t.type === "income" ? inc += t.amount : exp += t.amount);
+      document.getElementById("totalBalance").textContent = formatVND(inc - exp);
+      document.getElementById("totalIncome").textContent = formatVND(inc);
+      document.getElementById("totalExpense").textContent = formatVND(exp);
 
-      transactions.forEach(tx => {
-        if (tx.type === "income") income += tx.amount;
-        else expense += tx.amount;
-      });
-
-      const balance = income - expense;
-
-      document.getElementById("totalBalance").textContent = formatVND(balance);
-      document.getElementById("totalIncome").textContent = formatVND(income);
-      document.getElementById("totalExpense").textContent = formatVND(expense);
-
-      const listEl = document.getElementById("txList");
-      listEl.innerHTML = "";
-
-      if (transactions.length === 0) {
-        listEl.innerHTML = `<div class="empty-state">Chưa có giao dịch nào. Hãy thêm giao dịch hoặc làm khảo sát nhận thưởng!</div>`;
+      const list = document.getElementById("txList");
+      list.innerHTML = "";
+      if (!transactions.length) {
+        list.innerHTML = `<div class="empty-state">Chưa có giao dịch nào.</div>`;
         return;
       }
 
-      // Dùng DocumentFragment để render nhanh, tránh giật lag
       const frag = document.createDocumentFragment();
-      transactions.forEach(tx => {
-        const item = document.createElement("div");
-        item.className = `tx-item ${tx.type}`;
-        const sign = tx.type === "income" ? "+" : "-";
-        const colorClass = tx.type === "income" ? "income-text" : "expense-text";
-
-        item.innerHTML = `
-          <div class="tx-info">
-            <span class="tx-title">${tx.desc}</span>
-            <span class="tx-date">${tx.date}</span>
+      transactions.forEach(t => {
+        const div = document.createElement("div");
+        div.className = `tx-item ${t.type}`;
+        div.innerHTML = `
+          <div>
+            <div class="tx-title">${t.desc}</div>
+            <div class="tx-date">${t.date}</div>
           </div>
           <div class="tx-right">
-            <span class="tx-amount ${colorClass}">${sign}${formatVND(tx.amount)}</span>
-            <button class="del-btn" title="Xóa" data-id="${tx.id}">&times;</button>
+            <span class="tx-amount ${t.type === "income" ? "income-text" : "expense-text"}">
+              ${t.type === "income" ? "+" : "-"}${formatVND(t.amount)}
+            </span>
+            <button class="del-btn" data-id="${t.id}" title="Xóa">&times;</button>
           </div>
         `;
-        frag.appendChild(item);
+        frag.appendChild(div);
       });
-
-      listEl.appendChild(frag);
+      list.appendChild(frag);
     }
 
-    function addTransaction(type, desc, amount) {
+    function addTx(type, desc, amount) {
       const now = new Date();
-      const dateStr = `${now.toLocaleDateString("vi-VN")} ${now.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}`;
-
       transactions.unshift({
-        id: Date.now().toString(),
+        id: Date.now().toString() + Math.random().toString(36).slice(2, 6),
         type,
         desc,
         amount: Number(amount),
-        date: dateStr
+        date: `${now.toLocaleDateString("vi-VN")} ${now.toLocaleTimeString("vi-VN", { hour: "2-digit", minute: "2-digit" })}`
       });
-
-      saveWalletState();
+      localStorage.setItem(KEYS.TX, JSON.stringify(transactions));
       renderWallet();
     }
 
-    // Sự kiện thêm giao dịch thủ công
-    document.getElementById("txForm").addEventListener("submit", (e) => {
+    document.getElementById("txForm").addEventListener("submit", e => {
       e.preventDefault();
       const type = document.getElementById("txType").value;
       const desc = document.getElementById("txDesc").value.trim();
       const amount = Number(document.getElementById("txAmount").value);
-
       if (!desc || amount <= 0) return;
-
-      addTransaction(type, desc, amount);
+      addTx(type, desc, amount);
       e.target.reset();
       showToast("Đã lưu giao dịch!");
     });
 
-    // Sự kiện xóa từng giao dịch (Event Delegation)
-    document.getElementById("txList").addEventListener("click", (e) => {
+    document.getElementById("txList").addEventListener("click", e => {
       if (e.target.classList.contains("del-btn")) {
         const id = e.target.getAttribute("data-id");
-        transactions = transactions.filter(tx => tx.id !== id);
-        saveWalletState();
+        transactions = transactions.filter(t => t.id !== id);
+        localStorage.setItem(KEYS.TX, JSON.stringify(transactions));
         renderWallet();
       }
     });
 
-    // Xóa toàn bộ lịch sử
     document.getElementById("clearAllTxBtn").addEventListener("click", () => {
-      if (transactions.length === 0) return;
       transactions = [];
-      saveWalletState();
+      localStorage.setItem(KEYS.TX, JSON.stringify(transactions));
       renderWallet();
-      showToast("Đã xóa toàn bộ lịch sử!");
+      showToast("Đã xóa lịch sử!");
     });
 
-    // ==========================================
-    // 5. LOGIC KHẢO SÁT (SURVEY) & CỘNG THƯỞNG
-    // ==========================================
-    function renderSurveyList() {
-      const container = document.getElementById("surveyListContainer");
-      container.innerHTML = "";
+    // SURVEY
+    let activeSv = null, qIdx = 0, picked = null;
 
+    function renderSurveys() {
+      const box = document.getElementById("surveyListContainer");
+      box.innerHTML = "";
       const frag = document.createDocumentFragment();
       SURVEY_DATA.forEach(sv => {
-        const isDone = completedSurveys.includes(sv.id);
-        const div = document.createElement("div");
-        div.className = "survey-item";
-        div.innerHTML = `
-          <div class="survey-meta">
-            <h4>${sv.title}</h4>
-            <p>${sv.desc}</p>
+        const done = completedSurveys.includes(sv.id);
+        const item = document.createElement("div");
+        item.className = "survey-item";
+        item.innerHTML = `
+          <div>
+            <div style="font-weight:700; font-size:0.92rem;">${sv.title}</div>
+            <div style="font-size:0.78rem; color:var(--muted);">${sv.desc}</div>
             <span class="reward-badge">+${formatVND(sv.reward)}</span>
           </div>
-          <button class="start-survey-btn ${isDone ? "done" : ""}" data-sv-id="${sv.id}" ${isDone ? "disabled" : ""}>
-            ${isDone ? "Đã nhận thưởng" : "Bắt đầu"}
+          <button class="start-survey-btn ${done ? "done" : ""}" data-id="${sv.id}" ${done ? "disabled" : ""}>
+            ${done ? "Đã nhận" : "Làm ngay"}
           </button>
         `;
-        frag.appendChild(div);
+        frag.appendChild(item);
       });
-
-      container.appendChild(frag);
+      box.appendChild(frag);
     }
 
-    function startSurvey(surveyId) {
-    
+    function showQuestion() {
+      const qObj = activeSv.questions[qIdx];
+      picked = null;
+      document.getElementById("surveyStepText").textContent = `Câu ${qIdx + 1}/${activeSv.questions.length}`;
+      document.getElementById("surveyProgress").style.width = `${(qIdx / activeSv.questions.length) * 100}%`;
+      document.getElementById("questionText").textContent = qObj.q;
+
+      const optList = document.getElementById("optionsList");
+      optList.innerHTML = "";
+      qObj.options.forEach((opt, i) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option-btn";
+        btn.textContent = opt;
+        btn.addEventListener("click", () => {
+          document.querySelectorAll(".option-btn").forEach(b => b.classList.remove("selected"));
+          btn.classList.add("selected");
+          picked = i;
+        });
+        optList.appendChild(btn);
+      });
+
+      document.getElementById("nextQuestionBtn").textContent =
+        qIdx === activeSv.questions.length - 1 ? `Hoàn thành (+${formatVND(activeSv.reward)})` : "Câu tiếp theo";
+    }
+
+    document.getElementById("surveyListContainer").addEventListener("click", e => {
+      if (e.target.classList.contains("start-survey-btn") && !e.target.disabled) {
+        activeSv = SURVEY_DATA.find(s => s.id === e.target.getAttribute("data-id"));
+        qIdx = 0;
+        document.getElementById("surveyListCard").style.display = "none";
+        document.getElementById("surveyPlayerCard").style.display = "block";
+        showQuestion();
+      }
+    });
+
+    document.getElementById("nextQuestionBtn").addEventListener("click", () => {
+      if (picked === null) return showToast("Hãy chọn 1 đáp án!");
+      qIdx++;
+      if (qIdx < activeSv.questions.length) {
+        showQuestion();
+      } else {
+        if (!completedSurveys.includes(activeSv.id)) {
+          completedSurveys.push(activeSv.id);
+          localStorage.setItem(KEYS.DONE_SV, JSON.stringify(completedSurveys));
+        }
+        addTx("income", `[Survey] ${activeSv.title}`, activeSv.reward);
+        document.getElementById("surveyPlayerCard").style.display = "none";
+        document.getElementById("surveyListCard").style.display = "block";
+        renderSurveys();
+        showToast(`+${formatVND(activeSv.reward)} vào ví AQ Money!`);
+      }
+    });
+
+    document.getElementById("cancelSurveyBtn").addEventListener("click", () => {
+      document.getElementById("surveyPlayerCard").style.display = "none";
+      document.getElementById("surveyListCard").style.display = "block";
+    });
+
+    document.getElementById("resetSurveysBtn").addEventListener("click", () => {
+      completedSurveys = [];
+      localStorage.setItem(KEYS.DONE_SV, JSON.stringify(comple
