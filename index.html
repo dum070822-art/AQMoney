@@ -1,0 +1,81 @@
+
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AQ Money</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#eef3fa;font-family:Arial,sans-serif;color:#172b4d}
+header{background:#102b50;color:white;padding:25px 20px;border-radius:0 0 25px 25px}
+.logo{font-size:25px;font-weight:bold;color:#70b7ff}
+h1{font-size:23px;margin:15px 0 5px}
+.balance{font-size:32px;font-weight:bold;margin-top:12px}
+main{padding:18px;max-width:550px;margin:auto}
+.cards{display:flex;gap:12px}
+.card{background:white;padding:16px;border-radius:15px;flex:1;box-shadow:0 2px 8px #00000010}
+.green{color:#159957}
+.red{color:#e34b4b}
+h3{margin-top:22px}
+input,select,button{width:100%;padding:13px;margin:7px 0;border:1px solid #d5deeb;border-radius:10px;font-size:15px}
+button{background:#1769db;color:white;border:0;font-weight:bold}
+.item{background:white;padding:14px;margin:9px 0;border-radius:12px;display:flex;justify-content:space-between}
+</style>
+</head>
+<body>
+<header>
+<div class="logo">AQ MONEY</div>
+<h1>Quản lý tài chính cá nhân</h1>
+<div>Tổng số dư của bạn</div>
+<div class="balance" id="balance">0 đ</div>
+</header>
+<main>
+<div class="cards">
+<div class="card">
+Thu nhập
+<h3 class="green" id="income">0 đ</h3>
+</div>
+<div class="card">
+Chi tiêu
+<h3 class="red" id="expense">0 đ</h3>
+</div>
+</div>
+<h3>Thêm giao dịch</h3>
+<input id="amount" type="number" placeholder="Nhập số tiền (VNĐ)">
+<select id="type">
+<option value="income">Thu nhập</option>
+<option value="expense">Chi tiêu</option>
+</select>
+<input id="note" placeholder="Ghi chú giao dịch">
+<button onclick="addTransaction()">+ Thêm giao dịch</button>
+<h3>Lịch sử giao dịch</h3>
+<div id="history"></div>
+</main>
+<script>
+let transactions=JSON.parse(localStorage.getItem("aqmoney")||"[]");
+function money(n){return n.toLocaleString("vi-VN")+" đ"}
+function render(){
+let inc=transactions.filter(t=>t.type==="income").reduce((s,t)=>s+t.amount,0);
+let exp=transactions.filter(t=>t.type==="expense").reduce((s,t)=>s+t.amount,0);
+document.getElementById("balance").textContent=money(inc-exp);
+document.getElementById("income").textContent=money(inc);
+document.getElementById("expense").textContent=money(exp);
+document.getElementById("history").innerHTML=transactions.slice().reverse().map(t=>
+`<div class="item"><span>${t.note}</span><b class="${t.type==="income"?"green":"red"}">${t.type==="income"?"+":"-"}${money(t.amount)}</b></div>`
+).join("")||"Chưa có giao dịch";
+}
+function addTransaction(){
+let amount=Number(document.getElementById("amount").value);
+let note=document.getElementById("note").value.trim()||"Giao dịch";
+if(amount<=0){alert("Hãy nhập số tiền hợp lệ");return}
+transactions.push({amount,type:document.getElementById("type").value,note});
+localStorage.setItem("aqmoney",JSON.stringify(transactions));
+document.getElementById("amount").value="";
+document.getElementById("note").value="";
+render();
+}
+render();
+</script>
+</body>
+</html>
